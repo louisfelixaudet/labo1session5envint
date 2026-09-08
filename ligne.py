@@ -8,6 +8,7 @@ class ligne(EvApp):
     def __init__(self, port_no = param.NUM_PORT):
         super().__init__(port_no)
         self.MSG_INIT = "MSG_INIT"
+        self.startOrFinish()
 
     def calculeDistanceParcouru(self, x1, y1): return math.abs(math.sqrt((x1 - 0)^2 + (y1 - 0)^2))
 
@@ -16,7 +17,6 @@ class ligne(EvApp):
     def verifMetre(self, disance): return disance > 100
 
     def dispatch_event(self, ev):
-        donnee = ev.split()
 
         if ev.type == "MSG_POSITION":
 
@@ -33,3 +33,6 @@ class ligne(EvApp):
         else:
             print("ERROR: message non connu")
 
+if __name__ == "__main__":
+    playLine = ligne()
+    playLine.run()

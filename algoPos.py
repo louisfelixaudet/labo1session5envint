@@ -18,3 +18,7 @@ class AlgoPos:
     def getY(self, yPrecedant, dy): return yPrecedant + dy
 
     def getOrientation(self, oriPrecedant, orientation): return oriPrecedant + orientation
+
+    def radianToDegree(self, angleRadian): return angleRadian * 180/math.pi
+
+    def degreeToRadian(self, angleDegree): return angleDegree * math.pi/180

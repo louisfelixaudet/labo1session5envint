@@ -1,13 +1,30 @@
 from ev_app import *
+from ev_app_client_api import *
 from robot import Robot
+import param
 
 
 class CtrlRobot(EvApp):
     def __init__(self, port_no):
         super().__init__(port_no)
         self.robot = Robot()
+        self.startLIne = False
+        self.MSG_POSITION = "MSG_POSITION"
+        self.x = 0
+        self.y = 0
+        self.orientation = 0
+        self.xPrecendant = 0
+        self.yPrecendant = 0
+        self.orientationPrecendant = 0
 
     def dispatch_event(self, ev):
+        # algo Ligne
+        if ev.type == "MSG_INIT":
+            self.startLIne = not self.startLIne
+
+        if self.startLIne:
+            gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, self.MSG_POSITION, self.x, self.y, self.orientaion)
+        
         # timeout périodique d'EvApp — ignorer
         if ev.type == 0:
             return
@@ -52,5 +69,5 @@ class CtrlRobot(EvApp):
         print("Bye bye")
 
 
-ctrl_robot = CtrlRobot(port_no=8000)
+ctrl_robot = CtrlRobot(port_no=param.NUM_PORT)
 ctrl_robot.run()
