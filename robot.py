@@ -1,4 +1,5 @@
 from gpiozero import DigitalOutputDevice, PWMOutputDevice
+from encodeur import Odometrie
 
 class Robot:
     def __init__(self):
@@ -16,6 +17,7 @@ class Robot:
         self.pwm_enb = self.enb
         self.pwm_ena.value = 0
         self.pwm_enb.value = 0
+        self.odom = Odometrie(pin_g=17, pin_d=27)
 
     def avancer(self, puissance):
         self.in1.on()   # In1
@@ -74,12 +76,21 @@ class Robot:
 
     def __del__(self):
         self.arreter()
+        self.odom.close()
         self.in1.close()
         self.in2.close()
         self.in3.close()
         self.in4.close()
         self.ena.close()
         self.enb.close()
+    
+    def _maj_signes(self):
+    # +1 avant, -1 arrière — l'encodeur ne donne pas le sens
+        sg = 1 if self.in1.value and not self.in2.value else (
+            -1 if self.in2.value and not self.in1.value else 0)
+        sd = 1 if self.in3.value and not self.in4.value else (
+            -1 if self.in4.value and not self.in3.value else 0)
+        self.odom.set_signes(sg, sd)
 
 class Moteur:
     def __init__(self, pin):
