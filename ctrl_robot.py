@@ -23,7 +23,7 @@ class CtrlRobot(EvApp):
             self.startLIne = not self.startLIne
 
         if self.startLIne:
-            gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, self.MSG_POSITION, self.x, self.y, self.orientaion)
+            gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORT, self.MSG_POSITION, self.x, self.y, self.orientaion)
         
         # timeout périodique d'EvApp — ignorer
         if ev.type == 0:
