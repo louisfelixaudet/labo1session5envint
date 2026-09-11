@@ -17,7 +17,7 @@ class Robot:
         self.pwm_enb = self.enb
         self.pwm_ena.value = 0
         self.pwm_enb.value = 0
-        self.odom = Odometrie(pin_g=17, pin_d=27)
+        self.odom = Odometrie(pin_g=27, pin_d=22)
 
     def avancer(self, puissance):
         self.in1.on()   # In1
