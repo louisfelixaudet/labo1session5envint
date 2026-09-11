@@ -47,10 +47,14 @@ class telecom():
     def PowerServing(self, strike):
         if  strike[0] == 1 or strike == 3:
             self.power = strike[1]
-        if strike[0] == 2 or strike[0] == 4:
+        if strike[0] == 2 or strike[0] == 4 and self.power == 0:
             self.power = strike[1]
         if self.directAct == 2 or self.directAct == 4 and strike[0] == 5 or strike[0] == 6:
             self.power += strike[1]
+            if self.directAct == 2:
+                self.SendMSG(2)
+            else:
+                self.SendMSG(4)
 
     def ChooseMove(self, move):
         if move == 5 or move == 6 or move == 8:
