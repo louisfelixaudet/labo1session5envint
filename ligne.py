@@ -2,6 +2,7 @@
 from ev_app_client_api import *
 from ev_app import *
 import math
+from algoPos import AlgoPos 
 import param
 
 class ligne(EvApp):
@@ -9,8 +10,7 @@ class ligne(EvApp):
         super().__init__(port_no)
         self.MSG_INIT = "MSG_INIT"
         self.startOrFinish()
-
-    def calculeDistanceParcouru(self, x1, y1): return math.abs(math.sqrt((x1 - 0)^2 + (y1 - 0)^2))
+        self.algo = AlgoPos()
 
     def startOrFinish(self): gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, self.MSG_INIT)
 
@@ -28,7 +28,7 @@ class ligne(EvApp):
                 print("ERROR: valeur non valide")
                 return
 
-            if self.verifMetre(self.calculeDistanceParcouru(x, y)):
+            if self.verifMetre(self.algo.calculeDistanceParcouru(x, y)):
                 self.startOrFinish()
         else:
             print("ERROR: message non connu")
