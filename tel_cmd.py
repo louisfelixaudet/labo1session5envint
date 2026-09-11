@@ -55,11 +55,17 @@ class telecom():
             self.power = 0.0
 
     def ChooseMove(self, move):
-        if move == 5 or move == 6 or move == 8:
+        if move in (5,6,7,8):
             return self.directAct
         else:
             return move
-        
+
+    def message_a_envoyer(self, code):
+        if code in (5, 6):
+            if self.directAct in (1,2,3,4):
+                return self.directAct
+            return None
+        return code
 
 
     def SendMSG(self, move):
@@ -69,7 +75,11 @@ class telecom():
 
 telecommande = telecom()
 while telecommande.run:
-    telecommande.SendMSG(telecommande.ReadKey())
+    code = telecommande.ReadKey()
+    telecommande.StopHandler(code)
+    msg = telecommande.message_a_envoyer(code)
+    if msg is not None:
+        telecommande.SendMSG(msg)
     time.sleep(0.15)
     
     
