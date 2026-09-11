@@ -8,8 +8,8 @@ import time
 
 from ev_app_client_api import *
 
-HOST_IP            = "127.0.0.1"  # Écoute sur loop back uniquement
-#HOST_IP             = "0.0.0.0"    # Écoute sur toutes les interfaces
+#HOST_IP            = "127.0.0.1"  # Écoute sur loop back uniquement
+HOST_IP             = "0.0.0.0"    # Écoute sur toutes les interfaces
 
 class EvDesc:
     def __init__(self, type, donnée):
