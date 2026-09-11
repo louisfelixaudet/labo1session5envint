@@ -38,15 +38,23 @@ class CtrlRobot(EvApp):
         if ev.type == 1:
             print(f"tourner gauche {v}")
             self.robot.tournerGauche(v)
+            self.robot._maj_signes()
+            print(self.robot.odom)
         elif ev.type == 2:
             print(f"avancer robot {v}")
             self.robot.avancer(v)
+            self.robot._maj_signes()
+            print(self.robot.odom)
         elif ev.type == 3:
             print(f"tourner droite {v}")
             self.robot.tournerDroite(v)
+            self.robot._maj_signes()
+            print(self.robot.odom)
         elif ev.type == 4:
             print(f"reculer robot {v}")
             self.robot.reculer(v)
+            self.robot._maj_signes()
+            print(self.robot.odom)
         elif ev.type == 5:
             print(f"augmente de {v}")
         elif ev.type == 6:
@@ -54,10 +62,14 @@ class CtrlRobot(EvApp):
         elif ev.type == 7:
             print("ARRET")
             self.robot.arreter()
+            self.robot._maj_signes()
+            print(self.robot.odom)
         elif ev.type == 8:
             print("QUITTER")
             self.robot.arreter()
             self.quitter_app()
+            self.robot._maj_signes()
+            print(self.robot.odom)
         else:
             print("message invalide", ev)
 
