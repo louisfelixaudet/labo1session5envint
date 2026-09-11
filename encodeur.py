@@ -83,7 +83,7 @@ class Odometrie:
             f"d={self.distance:.1f} cm  v={self.v:.1f} cm/s "
             f"(vg={self.vg:.1f} vd={self.vd:.1f})  "
             f"pos=({self.x:.1f},{self.y:.1f})  "
-            f"θ={self.angle * 180 / 3.1416:.1f}°"
+            f"θ={(self.angle * 180 / 3.1416) % 360:.1f}°"
         )
 
     def close(self):
