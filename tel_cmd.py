@@ -49,7 +49,7 @@ class telecom():
             self.power = strike[1]
         if strike[0] == 2 or strike[0] == 4:
             self.power = strike[1]
-        if self.directAct == 2 or self.directAct == 4 and strike[0] == 5 or strike[0] == 5:
+        if self.directAct == 2 or self.directAct == 4 and strike[0] == 5 or strike[0] == 6:
             self.power += strike[1]
 
     def ChooseMove(self, move):
