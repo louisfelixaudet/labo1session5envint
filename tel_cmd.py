@@ -51,13 +51,14 @@ class telecom():
             self.power = strike[1]
         if self.directAct == 2 or self.directAct == 4 and strike[0] == 5 or strike[0] == 6:
             self.power += strike[1]
+            print(self.directAct)
             self.SendMSG(self.directAct)
 
     def ChooseMove(self, move):
         if move == 5 or move == 6 or move == 8:
-            return
+            return self.directAct
         else:
-            self.directAct = move
+            return move
         
 
 
