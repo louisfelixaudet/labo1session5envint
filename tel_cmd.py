@@ -13,9 +13,9 @@ class telecom():
         # code darret > 6
         # code derreur == 0
         self.dictMove = {
-            'q': [1, 1],
+            'q': [1, 0.7],
             'w': [2, 0.9],
-            'e': [3, 1],
+            'e': [3, 0.7],
             's': [4, 0.6],
             '.': [5, 0.05],
             ',': [6, -0.05],
@@ -47,12 +47,12 @@ class telecom():
     def PowerServing(self, strike):
         if  strike[0] == 1 or strike == 3:
             self.power = strike[1]
-        if strike[0] == 2 or strike[0] == 4 and self.power == 0:
+        elif strike[0] == 2 or strike[0] == 4 and self.power == 0:
             self.power = strike[1]
-        if self.directAct == 2 or self.directAct == 4 and strike[0] == 5 or strike[0] == 6:
-            self.power += strike[1]
-            print(self.directAct)
-            self.SendMSG(self.directAct)
+        elif self.directAct == 2 or self.directAct == 4 and strike[0] == 5 or strike[0] == 6:
+            self.power = max(0.0, min(1.0, self.power + strike[1]))
+        else:
+            self.power = 0.0
 
     def ChooseMove(self, move):
         if move == 5 or move == 6 or move == 8:
@@ -70,6 +70,6 @@ class telecom():
 telecommande = telecom()
 while telecommande.run:
     telecommande.SendMSG(telecommande.ReadKey())
-    time.sleep(0.75)
+    time.sleep(0.15)
     
     
