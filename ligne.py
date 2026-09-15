@@ -7,7 +7,7 @@ import param
 
 class ligne(EvApp):
     def __init__(self, port_no = param.NUM_PORT):
-        super().__init__(port_no)
+        super().__init__(port_no, tmo = 0.04)
         self.MSG_INIT = 9
         self.startOrFinish()
         self.algo = AlgoPos()
