@@ -1,3 +1,4 @@
+import time
 from ev_app import *
 from ev_app_client_api import *
 from robot import Robot
@@ -17,13 +18,19 @@ class CtrlRobot(EvApp):
         self.yPrecendant = 0
         self.orientationPrecendant = 0
 
-    def dispatch_event(self, ev):
-        # algo Ligne
+        self.INTERVALLE_ENVOI = 0.040  # 40 ms
+        self.dernierEnvoi = time.monotonic()
 
-        if self.startLIne:
-            gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORT, self.MSG_POSITION, self.x, self.y, self.orientation)
-        
-        # timeout périodique d'EvApp — ignorer
+    def envoyerPositionSiTemps(self):
+        maintenant = time.monotonic()
+        if self.startLIne and (maintenant - self.dernierEnvoi) >= self.INTERVALLE_ENVOI:
+            gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORT,
+                           self.MSG_POSITION, self.x, self.y, self.orientation)
+            self.dernierEnvoi = maintenant
+
+    def dispatch_event(self, ev):
+        self.envoyerPositionSiTemps()
+
         if ev.type == 0:
             return
 
