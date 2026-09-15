@@ -7,7 +7,7 @@ import param
 
 class CtrlRobot(EvApp):
     def __init__(self, port_no):
-        super().__init__(port_no)
+        super().__init__(port_no, tmo = 0.04)
         self.robot = Robot()
         self.startLIne = False
         self.MSG_POSITION = 10
