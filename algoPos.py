@@ -23,4 +23,4 @@ class AlgoPos:
 
     def degreeToRadian(self, angleDegree): return angleDegree * math.pi/180
 
-    def calculeDistanceParcouru(self, x1, y1): return math.abs(math.sqrt((x1 - 0)^2 + (y1 - 0)^2))
+    def calculeDistanceParcouru(self, x1, y1): return math.hypot(x1, y1)

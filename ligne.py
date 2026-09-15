@@ -1,32 +1,32 @@
-# par default on commence toujours a la position (0, 0)
 from ev_app_client_api import *
 from ev_app import *
 import math
-from algoPos import AlgoPos 
+from algoPos import AlgoPos
 import param
 
+
 class ligne(EvApp):
-    def __init__(self, port_no = param.NUM_PORT):
-        super().__init__(port_no, tmo = 0.04)
+    def __init__(self, port_no=param.NUM_PORT):
+        super().__init__(port_no, tmo=0.02)
         self.MSG_INIT = 9
-        self.startOrFinish()
         self.algo = AlgoPos()
+        self.startOrFinish()
 
-    def startOrFinish(self): gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, self.MSG_INIT)
+    def startOrFinish(self):
+        gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, self.MSG_INIT)
 
-    def verifMetre(self, disance):
-        print(f"verif distance {disance}")
-        return disance >= 100
+    def verifMetre(self, distance):
+        return distance >= 100
 
     def dispatch_event(self, ev):
+        if ev.type == 0:
+            return
 
         if ev.type == 10:
-
-            estTabFloat = all(isinstance(x, float) for x in ev)
-
-            if estTabFloat:
-                x, y, o = ev
-            else:
+            parts = ev.split()
+            try:
+                x, y, o = (float(p) for p in parts[:3])
+            except (ValueError, IndexError):
                 print("ERROR: valeur non valide")
                 return
 
@@ -34,6 +34,7 @@ class ligne(EvApp):
                 self.startOrFinish()
         else:
             print("ERROR: message non connu")
+
 
 if __name__ == "__main__":
     playLine = ligne()
