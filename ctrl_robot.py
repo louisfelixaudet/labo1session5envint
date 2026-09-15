@@ -9,7 +9,7 @@ class CtrlRobot(EvApp):
         super().__init__(port_no)
         self.robot = Robot()
         self.startLIne = False
-        self.MSG_POSITION = "MSG_POSITION"
+        self.MSG_POSITION = 10
         self.x = 0
         self.y = 0
         self.orientation = 0
@@ -19,7 +19,7 @@ class CtrlRobot(EvApp):
 
     def dispatch_event(self, ev):
         # algo Ligne
-        if ev.type == "MSG_INIT":
+        if ev.type == 9:
             self.startLIne = not self.startLIne
 
         if self.startLIne:

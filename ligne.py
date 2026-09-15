@@ -8,7 +8,7 @@ import param
 class ligne(EvApp):
     def __init__(self, port_no = param.NUM_PORT):
         super().__init__(port_no)
-        self.MSG_INIT = "MSG_INIT"
+        self.MSG_INIT = 9
         self.startOrFinish()
         self.algo = AlgoPos()
 
@@ -18,7 +18,7 @@ class ligne(EvApp):
 
     def dispatch_event(self, ev):
 
-        if ev.type == "MSG_POSITION":
+        if ev.type == 10:
 
             estTabFloat = all(isinstance(x, float) for x in ev)
 
