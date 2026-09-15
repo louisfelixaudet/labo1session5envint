@@ -21,6 +21,9 @@ class CtrlRobot(EvApp):
         # algo Ligne
         if ev.type == 9:
             self.startLIne = not self.startLIne
+            self.robot.arreter()
+            self.robot._maj_signes()
+            print(self.robot.odom)
 
         if self.startLIne:
             gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORT, self.MSG_POSITION, self.x, self.y, self.orientation)
