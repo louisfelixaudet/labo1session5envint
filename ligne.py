@@ -14,7 +14,9 @@ class ligne(EvApp):
 
     def startOrFinish(self): gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, self.MSG_INIT)
 
-    def verifMetre(self, disance): return disance > 100
+    def verifMetre(self, disance):
+        print(f"verif distance {disance}")
+        return disance >= 100
 
     def dispatch_event(self, ev):
 
