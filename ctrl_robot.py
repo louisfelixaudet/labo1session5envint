@@ -19,13 +19,6 @@ class CtrlRobot(EvApp):
 
     def dispatch_event(self, ev):
         # algo Ligne
-        if ev.type == 9:
-            was = not self.startLIne
-            self.startLIne = not self.startLIne
-            if was: 
-                self.robot.arreter()
-                self.robot._maj_signes()
-                print(self.robot.odom)
 
         if self.startLIne:
             gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORT, self.MSG_POSITION, self.x, self.y, self.orientation)
@@ -75,6 +68,13 @@ class CtrlRobot(EvApp):
             self.quitter_app()
             self.robot._maj_signes()
             print(self.robot.odom)
+        elif ev.type == 9: 
+            was = not self.startLIne
+            self.startLIne = not self.startLIne
+            if was: 
+                self.robot.arreter()
+                self.robot._maj_signes()
+                print(self.robot.odom)
         else:
             print("message invalide", ev)
 
