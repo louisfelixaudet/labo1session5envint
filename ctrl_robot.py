@@ -11,7 +11,6 @@ class CtrlRobot(EvApp):
         self.robot = Robot()
         self.startLIne = False
         self.MSG_POSITION = 10
-        self.MSG_RESTART = 11 
         self.x = 0
         self.y = 0
         self.orientation = 0
@@ -24,7 +23,6 @@ class CtrlRobot(EvApp):
         if self.startLIne and (maintenant - self.dernierEnvoi) >= self.INTERVALLE_ENVOI:
             o = self.robot.odom
             self.x, self.y, self.orientation = o.x, o.y, o.angle
-            print(f"port: {param.NUM_PORTLINE}, message: {self.MSG_POSITION}, x: {self.x}, y: {self.y}, angle: {self.orientation}")
             gen_ev_externe("127.0.0.1", param.NUM_PORTLINE,
                            self.MSG_POSITION, self.x, self.y, self.orientation)
             self.dernierEnvoi = maintenant
@@ -44,8 +42,6 @@ class CtrlRobot(EvApp):
         if ev.type == 1:
             self.robot.tournerGauche(v)
             self.robot._maj_signes()
-            gen_ev_externe("127.0.0.1", param.NUM_PORTLINE,
-                                       self.MSG_RESTART)
         elif ev.type == 2:
             self.robot.avancer(v)
             self.robot._maj_signes()
@@ -72,6 +68,9 @@ class CtrlRobot(EvApp):
             if not self.startLIne:
                 self.robot.arreter()
                 self.robot._maj_signes()
+                self.x = 0
+                self.y = 0
+                self.orientation = 0
                 print("Arrêt demandé par ligne.py", self.robot.odom)
         else:
             print("message invalide", ev)
