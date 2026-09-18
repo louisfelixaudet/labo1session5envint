@@ -68,10 +68,9 @@ class CtrlRobot(EvApp):
             if not self.startLIne:
                 self.robot.arreter()
                 self.robot._maj_signes()
-                self.x = 0
-                self.y = 0
-                self.orientation = 0
-                self.startLIne = not self.startLIne
+                self.robot.odom.angle = 0
+                self.robot.odom.x = 0
+                self.robot.odom.y = 0
                 print("Arrêt demandé par ligne.py", self.robot.odom)
         else:
             print("message invalide", ev)
