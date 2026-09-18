@@ -46,6 +46,8 @@ class CtrlRobot(EvApp):
         elif ev.type == 2:
             self.robot.avancer(v)
             self.robot._maj_signes()
+            if not self.startLIne:
+                self.startLIne = True
         elif ev.type == 3:
             self.robot.tournerDroite(v)
             self.robot._maj_signes()
