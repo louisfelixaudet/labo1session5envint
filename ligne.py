@@ -6,7 +6,7 @@ import param
 
 
 class ligne(EvApp):
-    def __init__(self, port_no=param.NUM_PORT):
+    def __init__(self, port_no=param.NUM_PORTLINE):
         super().__init__(port_no, tmo=0.02)
         self.MSG_INIT = 9
         self.algo = AlgoPos()
@@ -21,7 +21,7 @@ class ligne(EvApp):
 
     def dispatch_event(self, ev):
         if ev.type == 0:
-            print(f"erreur: {ev}")
+            #print(f"erreur: {ev}")
             return
 
         if ev.type == 10:
