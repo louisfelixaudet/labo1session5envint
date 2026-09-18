@@ -45,7 +45,7 @@ class telecom():
     # input: direction et vitesse
     # output: vitesse donnee
     def PowerServing(self, strike):
-        if  strike[0] == 1 or strike == 3:
+        if  strike[0] == 1 or strike[0] == 3:
             self.power = strike[1]
         elif strike[0] == 2 or strike[0] == 4 and self.power == 0:
             self.power = strike[1]
