@@ -65,6 +65,7 @@ class CtrlRobot(EvApp):
             self.quitter_app()
             self.robot._maj_signes()
         elif ev.type == 9:
+            print("start line")
             self.startLIne = not self.startLIne
             if not self.startLIne:
                 self.robot.arreter()
