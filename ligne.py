@@ -14,7 +14,7 @@ class ligne(EvApp):
         print("hello")
 
     def startOrFinish(self):
-        gen_ev_externe("172.31.6.170", param.NUM_PORT, self.MSG_INIT)
+        gen_ev_externe("172.31.6.170", param.NUM_PORTLINE, self.MSG_INIT)
 
     def verifMetre(self, distance):
         return distance >= 100
