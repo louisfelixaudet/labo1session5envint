@@ -11,6 +11,7 @@ class ligne(EvApp):
         self.MSG_INIT = 9
         self.algo = AlgoPos()
         self.startOrFinish()
+        print("hello")
 
     def startOrFinish(self):
         gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, self.MSG_INIT)
