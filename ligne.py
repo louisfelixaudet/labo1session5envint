@@ -21,7 +21,7 @@ class ligne(EvApp):
 
     def dispatch_event(self, ev):
         if ev.type == 0:
-            print("erreur")
+            print(f"erreur: {ev}")
             return
 
         if ev.type == 10:
