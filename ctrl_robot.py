@@ -23,7 +23,7 @@ class CtrlRobot(EvApp):
         if self.startLIne and (maintenant - self.dernierEnvoi) >= self.INTERVALLE_ENVOI:
             o = self.robot.odom
             self.x, self.y, self.orientation = o.x, o.y, o.angle
-            gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORT,
+            gen_ev_externe(param.IP_ADRESS, param.NUM_PORT,
                            self.MSG_POSITION, self.x, self.y, self.orientation)
             self.dernierEnvoi = maintenant
 
