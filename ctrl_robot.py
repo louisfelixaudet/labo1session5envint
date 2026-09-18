@@ -20,6 +20,7 @@ class CtrlRobot(EvApp):
 
     def envoyerPositionSiTemps(self):
         maintenant = time.monotonic()
+        print("envoyer position")
         if self.startLIne and (maintenant - self.dernierEnvoi) >= self.INTERVALLE_ENVOI:
             o = self.robot.odom
             self.x, self.y, self.orientation = o.x, o.y, o.angle
