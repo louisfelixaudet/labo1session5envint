@@ -25,6 +25,7 @@ class ligne(EvApp):
             return
 
         if ev.type == 10:
+            print("type 10 recu")
             parts = ev.split()
             try:
                 x, y, o = (float(p) for p in parts[:3])
