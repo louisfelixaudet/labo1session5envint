@@ -36,6 +36,9 @@ class ligne(EvApp):
 
             if self.verifMetre(self.algo.calculeDistanceParcouru(x, y)):
                 self.startOrFinish()
+        if ev.type == 11:
+            print("Restart Line")
+            self.startOrFinish()
         else:
             print("ERROR: message non connu")
 

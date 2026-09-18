@@ -11,6 +11,7 @@ class CtrlRobot(EvApp):
         self.robot = Robot()
         self.startLIne = False
         self.MSG_POSITION = 10
+        self.MSG_RESTART = 11 
         self.x = 0
         self.y = 0
         self.orientation = 0
@@ -43,11 +44,11 @@ class CtrlRobot(EvApp):
         if ev.type == 1:
             self.robot.tournerGauche(v)
             self.robot._maj_signes()
+            gen_ev_externe("127.0.0.1", param.NUM_PORTLINE,
+                                       self.MSG_RESTART)
         elif ev.type == 2:
             self.robot.avancer(v)
             self.robot._maj_signes()
-            if not self.startLIne:
-                self.startLIne = True
         elif ev.type == 3:
             self.robot.tournerDroite(v)
             self.robot._maj_signes()
