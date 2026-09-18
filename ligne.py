@@ -26,6 +26,7 @@ class ligne(EvApp):
             parts = ev.split()
             try:
                 x, y, o = (float(p) for p in parts[:3])
+                print(self.algo.calculeDistanceParcouru(x, y))
             except (ValueError, IndexError):
                 print("ERROR: valeur non valide")
                 return

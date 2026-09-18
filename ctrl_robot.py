@@ -80,4 +80,4 @@ class CtrlRobot(EvApp):
 
 
 ctrl_robot = CtrlRobot(port_no=param.NUM_PORT)
-ctrl_robot.run()
+ctrl_robot.run() 
