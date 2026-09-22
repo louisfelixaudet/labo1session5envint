@@ -10,21 +10,18 @@ class CtrlRobot(EvApp):
         super().__init__(port_no, tmo=0.02)  # 20 ms pour un tick fiable
         self.robot = Robot()
         self.startLIne = False
-        self.MSG_POSITION = 10
         self.x = 0
         self.y = 0
         self.orientation = 0
-
-        self.INTERVALLE_ENVOI = 0.040  # 40 ms
         self.dernierEnvoi = time.monotonic()
 
     def envoyerPositionSiTemps(self):
         maintenant = time.monotonic()
-        if self.startLIne and (maintenant - self.dernierEnvoi) >= self.INTERVALLE_ENVOI:
+        if self.startLIne and (maintenant - self.dernierEnvoi) >= param.INTERVALLE_ENVOI:
             o = self.robot.odom
             self.x, self.y, self.orientation = o.x, o.y, o.angle
             gen_ev_externe("127.0.0.1", param.NUM_PORTLINE,
-                           self.MSG_POSITION, self.x, self.y, self.orientation)
+                           param.MSG_POSITION, self.x, self.y, self.orientation)
             self.dernierEnvoi = maintenant
 
     def dispatch_event(self, ev):
@@ -39,26 +36,26 @@ class CtrlRobot(EvApp):
         except ValueError:
             v = 0.0
 
-        if ev.type == 1:
+        if ev.type == param.DROITE:
             self.robot.tournerGauche(v)
             self.robot._maj_signes()
-        elif ev.type == 2:
+        elif ev.type == param.AVANCER:
             self.robot.avancer(v)
             self.robot._maj_signes()
-        elif ev.type == 3:
+        elif ev.type == param.GAUCHE:
             self.robot.tournerDroite(v)
             self.robot._maj_signes()
-        elif ev.type == 4:
+        elif ev.type == param.RECULER:
             self.robot.reculer(v)
             self.robot._maj_signes()
-        elif ev.type == 5:
+        elif ev.type == param.AUG_SPEED:
             print(f"augmente de {v}")
-        elif ev.type == 6:
+        elif ev.type == param.DIM_SPEED:
             print(f"diminue de {v}")
-        elif ev.type == 7:
+        elif ev.type == param.ARRET:
             self.robot.arreter()
             self.robot._maj_signes()
-        elif ev.type == 8:
+        elif ev.type == param.STOP:
             self.robot.arreter()
             self.quitter_app()
             self.robot._maj_signes()

@@ -24,7 +24,7 @@ class ligne(EvApp):
             #print(f"erreur: {ev}")
             return
 
-        if ev.type == 10:
+        if ev.type == param.MSG_POSITION:
             print("type 10 recu")
             parts = ev.split()
             try:

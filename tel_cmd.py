@@ -13,14 +13,14 @@ class telecom():
         # code darret > 6
         # code derreur == 0
         self.dictMove = {
-            'q': [1, 0.7],
-            'w': [2, 0.9],
-            'e': [3, 0.7],
-            's': [4, 0.6],
-            '.': [5, 0.05],
-            ',': [6, -0.05],
-            'space': [7, 0],
-            'x': [8, 0]
+            'q': [param.DROITE, 0.7],
+            'w': [param.AVANCER, 0.9],
+            'e': [param.GAUCHE, 0.7],
+            's': [param.RECULER, 0.6],
+            '.': [param.AUG_SPEED, 0.05],
+            ',': [param.DIM_SPEED, -0.05],
+            'space': [param.ARRET, 0],
+            'x': [param.STOP, 0]
         }
 
     def ReadKey(self):
@@ -36,33 +36,33 @@ class telecom():
 
     def StopHandler(self, code):
         if code == 0: print ("tapper une touche valide")
-        if code == 7: self.power = 0
-        if code == 8: 
+        if code == param.ARRET: self.power = 0
+        if code == param.STOP:
             print ("Program has been stop")
-            self.run = False 
+            self.run = False
             self.power = 0
 
     # input: direction et vitesse
     # output: vitesse donnee
     def PowerServing(self, strike):
-        if  strike[0] == 1 or strike[0] == 3:
+        if  strike[0] == param.DROITE or strike[0] == param.GAUCHE:
             self.power = strike[1]
-        elif strike[0] == 2 or strike[0] == 4 and self.power == 0:
+        elif strike[0] == param.AVANCER or strike[0] == param.RECULER and self.power == 0:
             self.power = strike[1]
-        elif self.directAct == 2 or self.directAct == 4 and strike[0] == 5 or strike[0] == 6:
+        elif self.directAct == param.AVANCER or self.directAct == param.RECULER and strike[0] == param.AUG_SPEED or strike[0] == param.DIM_SPEED:
             self.power = max(0.0, min(1.0, self.power + strike[1]))
         else:
             self.power = 0.0
 
     def ChooseMove(self, move):
-        if move in (5,6,7,8):
+        if move in (param.AUG_SPEED, param.DIM_SPEED, param.ARRET, param.STOP):
             return self.directAct
         else:
             return move
 
     def message_a_envoyer(self, code):
-        if code in (5, 6):
-            if self.directAct in (1,2,3,4):
+        if code in (param.AUG_SPEED, param.DIM_SPEED):
+            if self.directAct in (param.DROITE, param.AVANCER, param.GAUCHE, param.RECULER):
                 return self.directAct
             return None
         return code
