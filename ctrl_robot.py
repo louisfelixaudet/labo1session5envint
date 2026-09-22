@@ -59,7 +59,7 @@ class CtrlRobot(EvApp):
             self.robot.arreter()
             self.quitter_app()
             self.robot._maj_signes()
-        elif ev.type == 9:
+        elif ev.type == param.MSG_INIT:
             print("start line")
             self.startLIne = not self.startLIne
             if not self.startLIne:

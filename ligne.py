@@ -8,13 +8,12 @@ import param
 class ligne(EvApp):
     def __init__(self, port_no=param.NUM_PORTLINE):
         super().__init__(port_no, tmo=0.02)
-        self.MSG_INIT = 9
         self.algo = AlgoPos()
         self.startOrFinish()
         print("hello")
 
     def startOrFinish(self):
-        gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, self.MSG_INIT)
+        gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, param.MSG_INIT)
 
     def verifMetre(self, distance):
         return distance >= 100
