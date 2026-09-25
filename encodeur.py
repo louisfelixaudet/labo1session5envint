@@ -72,7 +72,7 @@ class Odometrie:
         self.x = self.algo.getX(self.x, dx)
         self.y = self.algo.getY(self.y, dy)
         self.angle = self.algo.getOrientation(self.angle, dtheta)
-        self.distance += abs(d)
+        self.distance += d
 
         self.vg = dg / dt
         self.vd = dd / dt
