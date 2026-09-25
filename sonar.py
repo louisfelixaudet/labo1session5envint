@@ -81,14 +81,7 @@ class Lisseur:
 
 
 class Sonar:
-<<<<<<< HEAD
-    def __init__(self, trig, echo, led, identifiant=0):
-        self.identifiant = identifiant
-=======
-    """HC-SR04 : impulsion Trig, durée de Echo, distance lissée, DEL."""
-
     def __init__(self, trig, echo, led):
->>>>>>> 672824f20240db6c072c080eab96bcc069deaa1d
         self.trig = DigitalOutputDevice(trig)
         self.trig.off()
         self.echo = DigitalInputDevice(echo, pull_up=False)
@@ -129,7 +122,7 @@ class Sonar:
         if duree <= 0:
             return
 
-        distance = param.VITESSE_SON * duree / 2.0
+        distance = param.VITESSE_SON * duree / 2.0 * 100.0
         if distance < param.DIST_MIN_SONAR:
             return
         if distance > param.DIST_MAX_SONAR:
@@ -149,12 +142,7 @@ class Sonar:
         if periode != self._periode:
             self._periode = periode
             self.signaleur.clignoter(periode)
-<<<<<<< HEAD
-
-        if distance < param.SEUIL_ALERTE_CM or self._sous_alerte:
-=======
         if distance < param.SEUIL_ALERTE_CM:
->>>>>>> 672824f20240db6c072c080eab96bcc069deaa1d
             gen_ev_externe(
                 param.IP_ADRESSLINE, param.NUM_PORTLINE,
                 param.MSG_SONAR, distance,
