@@ -122,7 +122,7 @@ class Sonar:
         if duree <= 0:
             return
 
-        distance = param.VITESSE_SON * duree / 2.0 * 100.0
+        distance = param.VITESSE_SON * duree / 2.0 
         if distance < param.DIST_MIN_SONAR:
             return
         if distance > param.DIST_MAX_SONAR:

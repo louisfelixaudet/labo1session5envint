@@ -14,7 +14,7 @@ class telecom():
         # code derreur == 0
         self.dictMove = {
             'q': [param.DROITE, 0.7],
-            'w': [param.AVANCER, 0.9],
+            'w': [param.AVANCER, 0.4],
             'e': [param.GAUCHE, 0.7],
             's': [param.RECULER, 0.6],
             '.': [param.AUG_SPEED, 0.05],

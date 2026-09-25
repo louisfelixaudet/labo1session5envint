@@ -40,4 +40,4 @@ PERIODE_DEL_CALME = 5.0
 # ligne.py : arrêt sous 20 cm, reprise au-dessus de 30 cm
 SEUIL_ARRET_CM = 20
 SEUIL_REPRISE_CM = 30
-PUISSANCE_REPRISE = 0.9   # même puissance que la touche « w »
+PUISSANCE_REPRISE = 0.4   # même puissance que la touche « w »
