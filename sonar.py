@@ -53,8 +53,6 @@ class Signaleur:
 
 
 class Lisseur:
-    """Moyenne mobile, et moyenne mobile sans le min et le max."""
-
     def __init__(self, grandeur):
         self.grandeur = grandeur
         self._fenetre = []
@@ -83,8 +81,6 @@ class Lisseur:
 
 
 class Sonar:
-    """HC-SR04 : impulsion Trig, durée de Echo, distance lissée, DEL."""
-
     def __init__(self, trig, echo, led, identifiant=0):
         self.identifiant = identifiant
         self.trig = DigitalOutputDevice(trig)
@@ -101,7 +97,6 @@ class Sonar:
         self._periode = param.PERIODE_DEL_CALME
 
     def mesurer(self):
-        """Impulsion d'au moins 10 µs sur Trig."""
         self._t0 = None
         self.trig.off()
         time.sleep(0.000002)
@@ -128,8 +123,8 @@ class Sonar:
         duree = time.perf_counter() - t0
         if duree <= 0:
             return
-        # Aller-retour : d = v * t / 2. Ex. 10 ms → 1,715 m.
-        distance = param.VITESSE_SON * duree / 2.0 * 100.0
+
+        distance = param.VITESSE_SON * duree / 2.0
         if distance < param.DIST_MIN_SONAR:
             return
         if distance > param.DIST_MAX_SONAR:
@@ -149,9 +144,7 @@ class Sonar:
         if periode != self._periode:
             self._periode = periode
             self.signaleur.clignoter(periode)
-        # Sous 50 cm on prévient ligne. On envoie aussi la première
-        # mesure qui repasse au-dessus, sinon ligne ne voit jamais
-        # la distance > 30 cm qui autorise la reprise.
+
         if distance < param.SEUIL_ALERTE_CM or self._sous_alerte:
             gen_ev_externe(
                 param.IP_ADRESSLINE, param.NUM_PORTLINE,
