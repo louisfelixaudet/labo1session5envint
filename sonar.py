@@ -7,7 +7,6 @@ from gpiozero import DigitalInputDevice, DigitalOutputDevice
 
 
 class Signaleur:
-    """Fait clignoter une DEL dans un fil secondaire."""
 
     def __init__(self, gpio):
         self.led = DigitalOutputDevice(gpio)
@@ -27,10 +26,9 @@ class Signaleur:
         self.led.off()
 
     def clignoter(self, periode):
-        # Plus rapide que 50 ms : on refuse, la période minimale est 0,050 s.
         if periode < param.INTERVALLE_LIGHT:
             return
-        # Un thread Python ne se relance pas : on en crée un autre.
+
         self.arreter()
         self.periode = periode
         self._stop = threading.Event()
@@ -153,7 +151,7 @@ class Sonar:
 def main():
     gauche = Sonar(param.TRIG_SONAR_G, param.ECHO_SONAR_G, param.DEL_JAUNE)
     droite = Sonar(param.TRIG_SONAR_D, param.ECHO_SONAR_D, param.DEL_VERTE)
-    # Décalés de 50 ms : à 10 Hz chacun, sans que les deux ondes se croisent.
+
     demi = param.PERIODE_MESURE / 2
     try:
         while True:

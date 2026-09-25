@@ -10,8 +10,7 @@ class telecom():
         # m/s = power
         self.power = 0
         self.directAct = 0
-        # code darret > 6
-        # code derreur == 0
+
         self.dictMove = {
             'q': [param.DROITE, 0.7],
             'w': [param.AVANCER, 0.4],
@@ -42,8 +41,7 @@ class telecom():
             self.run = False
             self.power = 0
 
-    # input: direction et vitesse
-    # output: vitesse donnee
+
     def PowerServing(self, strike):
         if  strike[0] == param.DROITE or strike[0] == param.GAUCHE:
             self.power = strike[1]
