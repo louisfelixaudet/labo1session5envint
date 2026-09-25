@@ -85,8 +85,7 @@ class Lisseur:
 class Sonar:
     """HC-SR04 : impulsion Trig, durée de Echo, distance lissée, DEL."""
 
-    def __init__(self, trig, echo, led, identifiant=0):
-        self.identifiant = identifiant
+    def __init__(self, trig, echo, led):
         self.trig = DigitalOutputDevice(trig)
         self.trig.off()
         self.echo = DigitalInputDevice(echo, pull_up=False)
@@ -96,7 +95,6 @@ class Sonar:
         self.signaleur = Signaleur(led)
         self._t0 = None
         self._periode = None
-        self._sous_alerte = False
         self.signaleur.clignoter(param.PERIODE_DEL_CALME)
         self._periode = param.PERIODE_DEL_CALME
 
@@ -149,22 +147,17 @@ class Sonar:
         if periode != self._periode:
             self._periode = periode
             self.signaleur.clignoter(periode)
-        # Sous 50 cm on prévient ligne. On envoie aussi la première
-        # mesure qui repasse au-dessus, sinon ligne ne voit jamais
-        # la distance > 30 cm qui autorise la reprise.
-        if distance < param.SEUIL_ALERTE_CM or self._sous_alerte:
+        if distance < param.SEUIL_ALERTE_CM:
             gen_ev_externe(
                 param.IP_ADRESSLINE, param.NUM_PORTLINE,
-                param.MSG_SONAR, distance, self.identifiant,
+                param.MSG_SONAR, distance,
             )
-        self._sous_alerte = distance < param.SEUIL_ALERTE_CM
-        cote = "gauche" if self.identifiant == 0 else "droite"
-        print(f"sonar {cote}: {distance:.1f} cm")
+        print(f"sonar: {distance:.1f} cm")
 
 
 def main():
-    gauche = Sonar(param.TRIG_SONAR_G, param.ECHO_SONAR_G, param.DEL_JAUNE, 0)
-    droite = Sonar(param.TRIG_SONAR_D, param.ECHO_SONAR_D, param.DEL_VERTE, 1)
+    gauche = Sonar(param.TRIG_SONAR_G, param.ECHO_SONAR_G, param.DEL_JAUNE)
+    droite = Sonar(param.TRIG_SONAR_D, param.ECHO_SONAR_D, param.DEL_VERTE)
     # Décalés de 50 ms : à 10 Hz chacun, sans que les deux ondes se croisent.
     demi = param.PERIODE_MESURE / 2
     try:
