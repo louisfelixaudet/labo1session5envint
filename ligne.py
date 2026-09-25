@@ -10,7 +10,6 @@ class ligne(EvApp):
         super().__init__(port_no, tmo=0.02)
         self.algo = AlgoPos()
         self.distance_parcourue = 0.0
-        self.dist_sonar = {}
         self.arrete_par_sonar = False
         self.startOrFinish()
         print("hello")
@@ -31,12 +30,6 @@ class ligne(EvApp):
         except (ValueError, IndexError):
             print("ERROR: distance sonar non valide")
             return
-        if len(parts) > 1:
-            try:
-                self.dist_sonar[int(float(parts[1]))] = distance
-                distance = min(self.dist_sonar.values())
-            except ValueError:
-                pass
         print(f"sonar {distance:.1f} cm")
 
         if distance < param.SEUIL_ARRET_CM:
