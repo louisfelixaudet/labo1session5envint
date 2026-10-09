@@ -1,9 +1,13 @@
 import cv2
 from detecteur_hsv import Detecteur_hsv
 from ev_app_client_api import *
+from robot import Robot
+
+def track_bar_cb(x):
+    pass
 
 def determinerPosition(image, centre):
-    dy, dx = image.shape
+    dy, dx = image.shape[:2]
     GAUCHE = 0
     MILIEU = 1
     DROITE = 2
@@ -19,6 +23,13 @@ def determinerPosition(image, centre):
 titre_fenetre = "HSV Tester"
 
 cv2.namedWindow(titre_fenetre)
+cv2.createTrackbar('Hue min', titre_fenetre, 0, 179, track_bar_cb)
+cv2.createTrackbar('Hue max', titre_fenetre, 0, 179, track_bar_cb)
+cv2.createTrackbar('Sat min', titre_fenetre, 0, 255, track_bar_cb)
+cv2.createTrackbar('Sat max', titre_fenetre, 0, 255, track_bar_cb)
+cv2.createTrackbar('Val min', titre_fenetre, 0, 255, track_bar_cb)
+cv2.createTrackbar('Val max', titre_fenetre, 0, 255, track_bar_cb)
+
 HUE_MIN = cv2.getTrackbarPos('Hue min', titre_fenetre)
 HUE_MAX = cv2.getTrackbarPos('Hue max', titre_fenetre)
 SAT_MIN = cv2.getTrackbarPos('Sat min', titre_fenetre)
@@ -32,14 +43,18 @@ COULEUR_RECT = (0, 255, 0) # vert
 GROSSEUR_TRAIT = 2
 INTERVALLE = 30 # ms
 
+SIZE_MIN_MOVE = 0
+SIZE_MAX_STOP = 0
+FORCE_TOURNER = 0.5
+FORCE_AVANCER = 0.5
 
 detecteur = Detecteur_hsv()
 detecteur.demarrer()
-image, image_disc, aire_max, p_hg, p_bd, x_c, y_c = \
+image, image_disc, aire_max, p_hg, p_bd, centre = \
  detecteur.detecter(TEINTE_MIN, TEINTE_MAX)
 cv2.imshow("image", image)
 
-
+robot = Robot()
 try:
     terminer = False
     while not terminer:
@@ -54,32 +69,30 @@ try:
         TEINTE_MIN = (HUE_MIN, SAT_MIN, VAL_MIN)
         TEINTE_MAX = (HUE_MAX, SAT_MAX, VAL_MAX)
 
-        image, image_disc, aire_max, p_hg, p_bd, x_c, y_c = \
+        image, image_disc, aire_max, p_hg, p_bd, centre = \
         detecteur.detecter(TEINTE_MIN, TEINTE_MAX)
 
         if aire_max > 0:
             cv2.rectangle(image, p_hg, p_bd, COULEUR_RECT, GROSSEUR_TRAIT)
-            determinerPosition(image, (x_c, y_c))
+            posobj = determinerPosition(image, centre)
 
         cv2.imshow("Image BGR", image)
         cv2.imshow("Image disc", image_disc)
 
         # <<-- Logiquement tu as juste a faire cette algo et tester -->>
-        # utilise la fonction determinerPosition pour trouver la position de la balle
+        
         # Demande aussi au prof si la maniere dont on fait le programme principal est correct.
 
         # ICI la logique pour la poursuite de la balle
-        # Si la surface est plus petite qu’un minimum
-        # (déterminé par expériences), le robot ne bouge pas car
-        # c’est peu probable que cela soit la balle ou alors elle
-        # est trop loin;
-        # Si la surface est plus grande qu’un maximum
-        # (déterminé par expériences), le robot ne bouge pas
-        # car la balle est trop proche;
-        # Si la balle est au centre et que sa surface est correcte,
-        # le robot avance;
-        # Si la balle est à gauche de l’image, le robot tourne à gauche;
-        # Si la balle est à droite de l’image, le robot tourne à droite;
+        if(aire_max >= SIZE_MIN_MOVE and aire_max <= SIZE_MAX_STOP):
+            if (posobj == 0):
+                robot.tournerGauche(FORCE_TOURNER)
+            elif (posobj == 1):
+                robot.avancer(FORCE_AVANCER)
+            elif (posobj == 2):
+                robot.tournerDroite(FORCE_TOURNER)
+        else:
+            robot.arreter()
 
         choix = cv2.waitKey(INTERVALLE)
         if choix == ord('x'):
