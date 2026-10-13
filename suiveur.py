@@ -23,11 +23,11 @@ def determinerPosition(image, centre):
         return DROITE
 
 
-HUE_MIN = 2
-HUE_MAX = 57
-SAT_MIN = 144
-SAT_MAX = 246
-VAL_MIN = 89
+HUE_MIN = 97
+HUE_MAX = 108
+SAT_MIN = 87
+SAT_MAX = 255
+VAL_MIN = 111
 VAL_MAX = 255
 
 TEINTE_MIN = (HUE_MIN, SAT_MIN, VAL_MIN)
