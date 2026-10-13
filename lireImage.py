@@ -26,7 +26,7 @@ class CameraLinux:
         if platform.system() == "Linux":
             from picamera2 import Picamera2
             self.picam2 = Picamera2()
-            config = picam2.create_video_configuration(main={"format": 'RGB888', "size": (largeur, hauteur)})
+            config = self.picam2.create_video_configuration(main={"format": 'RGB888', "size": (largeur, hauteur)})
             self.picam2.configure(config) 
 
     def capture(self):
@@ -58,12 +58,15 @@ class Camera:
        self.cam.arreter()
         
 if __name__ == "__main__":
-    terminer = False
+    import time
     cam = Camera()
     cam.demarrer()
 
-    while not terminer:
-        cv2.imshow("image", cam.capture())
-        choix = cv2.waitKey(30)
-        if choix == ord('x'):
-            terminer = True
+    try:
+        while True:
+            cam.capture()
+            time.sleep(0.03)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        cam.arreter()

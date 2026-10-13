@@ -1,7 +1,7 @@
+import time
 import cv2
 from detecteur_hsv import Detecteur_hsv
 from ev_app_client_api import *
-from robot import Robot
 import param
 
 def track_bar_cb(x):
@@ -45,9 +45,7 @@ detecteur = Detecteur_hsv()
 detecteur.demarrer()
 image, image_disc, aire_max, p_hg, p_bd, centre = \
  detecteur.detecter(TEINTE_MIN, TEINTE_MAX)
-cv2.imshow("image", image)
 
-robot = Robot()
 try:
     terminer = False
     while not terminer:
@@ -69,9 +67,6 @@ try:
             cv2.rectangle(image, p_hg, p_bd, COULEUR_RECT, GROSSEUR_TRAIT)
             posobj = determinerPosition(image, centre)
 
-        cv2.imshow("Image BGR", image)
-        cv2.imshow("Image disc", image_disc)
-
         # <<-- Logiquement tu as juste a faire cette algo et tester -->>
         
         # Demande aussi au prof si la maniere dont on fait le programme principal est correct.
@@ -79,22 +74,20 @@ try:
         # ICI la logique pour la poursuite de la balle
         if(aire_max >= SIZE_MIN_MOVE and aire_max <= SIZE_MAX_STOP):
             if (posobj == GAUCHE):
-                gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORTLINE, param.GAUCHE, FORCE_TOURNER)
+                gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, param.GAUCHE, FORCE_TOURNER)
             elif (posobj == MILIEU):
-                gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORTLINE, param.AVANCER, FORCE_AVANCER)
+                gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, param.AVANCER, FORCE_AVANCER)
             elif (posobj == DROITE):
-                gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORTLINE, param.DROITE, FORCE_TOURNER)
+                gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, param.DROITE, FORCE_TOURNER)
         else:
-            robot.arreter()
+            gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, param.ARRET, 0)
 
-        choix = cv2.waitKey(INTERVALLE)
-        if choix == ord('x'):
-            terminer = True
+        time.sleep(INTERVALLE / 1000)
 
 except KeyboardInterrupt:
     print(f"CTRL-C")
 finally:
-    cv2.destroyAllWindows()
+    gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, param.ARRET, 0)
     detecteur.arreter()
 
     
