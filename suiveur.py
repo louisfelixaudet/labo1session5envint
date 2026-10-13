@@ -2,6 +2,7 @@ import cv2
 from detecteur_hsv import Detecteur_hsv
 from ev_app_client_api import *
 from robot import Robot
+import param
 
 def track_bar_cb(x):
     pass
@@ -86,17 +87,18 @@ try:
         # ICI la logique pour la poursuite de la balle
         if(aire_max >= SIZE_MIN_MOVE and aire_max <= SIZE_MAX_STOP):
             if (posobj == 0):
-                robot.tournerGauche(FORCE_TOURNER)
+                gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORTLINE, param.GAUCHE, FORCE_TOURNER)
             elif (posobj == 1):
-                robot.avancer(FORCE_AVANCER)
+                gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORTLINE, param.AVANCER, FORCE_AVANCER)
             elif (posobj == 2):
-                robot.tournerDroite(FORCE_TOURNER)
+                gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORTLINE, param.DROITE, FORCE_TOURNER)
         else:
             robot.arreter()
 
         choix = cv2.waitKey(INTERVALLE)
         if choix == ord('x'):
             terminer = True
+
 except KeyboardInterrupt:
     print(f"CTRL-C")
 finally:
