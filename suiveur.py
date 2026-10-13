@@ -7,11 +7,12 @@ import param
 def track_bar_cb(x):
     pass
 
+GAUCHE = 0
+MILIEU = 1
+DROITE = 2
+
 def determinerPosition(image, centre):
     dy, dx = image.shape[:2]
-    GAUCHE = 0
-    MILIEU = 1
-    DROITE = 2
     x, y = centre
     longueurSect = dx / 3
     if x >= 0 and x <= longueurSect:
@@ -21,22 +22,13 @@ def determinerPosition(image, centre):
     elif x > longueurSect * 2 and x <= longueurSect * 3:
         return DROITE
 
-titre_fenetre = "HSV Tester"
 
-cv2.namedWindow(titre_fenetre)
-cv2.createTrackbar('Hue min', titre_fenetre, 0, 179, track_bar_cb)
-cv2.createTrackbar('Hue max', titre_fenetre, 0, 179, track_bar_cb)
-cv2.createTrackbar('Sat min', titre_fenetre, 0, 255, track_bar_cb)
-cv2.createTrackbar('Sat max', titre_fenetre, 0, 255, track_bar_cb)
-cv2.createTrackbar('Val min', titre_fenetre, 0, 255, track_bar_cb)
-cv2.createTrackbar('Val max', titre_fenetre, 0, 255, track_bar_cb)
-
-HUE_MIN = cv2.getTrackbarPos('Hue min', titre_fenetre)
-HUE_MAX = cv2.getTrackbarPos('Hue max', titre_fenetre)
-SAT_MIN = cv2.getTrackbarPos('Sat min', titre_fenetre)
-SAT_MAX = cv2.getTrackbarPos('Sat max', titre_fenetre)
-VAL_MIN = cv2.getTrackbarPos('Val min', titre_fenetre)
-VAL_MAX = cv2.getTrackbarPos('Val max', titre_fenetre)
+HUE_MIN = 2
+HUE_MAX = 57
+SAT_MIN = 144
+SAT_MAX = 246
+VAL_MIN = 89
+VAL_MAX = 255
 
 TEINTE_MIN = (HUE_MIN, SAT_MIN, VAL_MIN)
 TEINTE_MAX = (HUE_MAX, SAT_MAX, VAL_MAX)
@@ -44,8 +36,8 @@ COULEUR_RECT = (0, 255, 0) # vert
 GROSSEUR_TRAIT = 2
 INTERVALLE = 30 # ms
 
-SIZE_MIN_MOVE = 0
-SIZE_MAX_STOP = 0
+SIZE_MIN_MOVE = 300
+SIZE_MAX_STOP = 15000
 FORCE_TOURNER = 0.5
 FORCE_AVANCER = 0.5
 
@@ -60,12 +52,12 @@ try:
     terminer = False
     while not terminer:
 
-        HUE_MIN = cv2.getTrackbarPos('Hue min', titre_fenetre)
-        HUE_MAX = cv2.getTrackbarPos('Hue max', titre_fenetre)
-        SAT_MIN = cv2.getTrackbarPos('Sat min', titre_fenetre)
-        SAT_MAX = cv2.getTrackbarPos('Sat max', titre_fenetre)
-        VAL_MIN = cv2.getTrackbarPos('Val min', titre_fenetre)
-        VAL_MAX = cv2.getTrackbarPos('Val max', titre_fenetre)
+        HUE_MIN = 2
+        HUE_MAX = 57
+        SAT_MIN = 144
+        SAT_MAX = 246
+        VAL_MIN = 89
+        VAL_MAX = 255
 
         TEINTE_MIN = (HUE_MIN, SAT_MIN, VAL_MIN)
         TEINTE_MAX = (HUE_MAX, SAT_MAX, VAL_MAX)
@@ -86,11 +78,11 @@ try:
 
         # ICI la logique pour la poursuite de la balle
         if(aire_max >= SIZE_MIN_MOVE and aire_max <= SIZE_MAX_STOP):
-            if (posobj == 0):
+            if (posobj == GAUCHE):
                 gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORTLINE, param.GAUCHE, FORCE_TOURNER)
-            elif (posobj == 1):
+            elif (posobj == MILIEU):
                 gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORTLINE, param.AVANCER, FORCE_AVANCER)
-            elif (posobj == 2):
+            elif (posobj == DROITE):
                 gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORTLINE, param.DROITE, FORCE_TOURNER)
         else:
             robot.arreter()
