@@ -1,7 +1,7 @@
 import threading
 import time
 from gpiozero import DigitalInputDevice
-from algoPos import AlgoPos
+from algoPos import *
 
 CIRCONFERENCE_CM = 21.5
 TRANSITIONS_PAR_TOUR = 40          # 20 fentes × 2 bords
@@ -33,7 +33,6 @@ class EncodeurRoue:
 
 class Odometrie:
     def __init__(self, pin_g=17, pin_d=27):
-        self.algo = AlgoPos()
         self.enc_g = EncodeurRoue(pin_g)
         self.enc_d = EncodeurRoue(pin_d)
         self.signe_g = 0
@@ -64,14 +63,14 @@ class Odometrie:
         dg = self.enc_g.consommer() * CM_PAR_TICK * self.signe_g
         dd = self.enc_d.consommer() * CM_PAR_TICK * self.signe_d
 
-        dtheta = self.algo.calculeOrientation(dd, dg)
-        d = self.algo.calculeDistance(dd, dg)
-        dx = self.algo.deplcementX(d, self.angle, dtheta)
-        dy = self.algo.deplcementY(d, self.angle, dtheta)
+        dtheta = calculeOrientation(dd, dg)
+        d = calculeDistance(dd, dg)
+        dx = deplcementX(d, self.angle, dtheta)
+        dy = deplcementY(d, self.angle, dtheta)
 
-        self.x = self.algo.getX(self.x, dx)
-        self.y = self.algo.getY(self.y, dy)
-        self.angle = self.algo.getOrientation(self.angle, dtheta)
+        self.x = getX(self.x, dx)
+        self.y = getY(self.y, dy)
+        self.angle = getOrientation(self.angle, dtheta)
         self.distance += d
 
         self.vg = dg / dt

@@ -1,26 +1,67 @@
 # calcule pour la position 
 import math
+import numpy as np
 
-class AlgoPos:
-    def __init__(self):
-        self.DISTANCEROUE = 13
 
-    def calculeOrientation(self, dd, dg): return (dd - dg) / self.DISTANCEROUE
+DISTANCEROUE = 13
+DIVTWO = 2
+ANGLE = 180
 
-    def calculeDistance(self, dd, dg): return (dd + dg) / 2
+def calculeOrientation(dd, dg): return (dd - dg) / DISTANCEROUE
 
-    def deplcementX(self, distance, anglePrecedant, angleActuel): return distance * math.cos(anglePrecedant + angleActuel / 2)
+def calculeDistance(dd, dg): return (dd + dg) / DIVTWO
 
-    def deplcementY(self, distance, anglePrecedant, angleActuel): return distance * math.sin(anglePrecedant + angleActuel / 2)
+def deplcementX(distance, anglePrecedant, angleActuel): return distance * math.cos(anglePrecedant + angleActuel / DIVTWO)
 
-    def getX(self, xPrecedant, dx): return xPrecedant + dx
+def deplcementY(distance, anglePrecedant, angleActuel): return distance * math.sin(anglePrecedant + angleActuel / DIVTWO)
 
-    def getY(self, yPrecedant, dy): return yPrecedant + dy
+def getX(xPrecedant, dx): return xPrecedant + dx
 
-    def getOrientation(self, oriPrecedant, orientation): return oriPrecedant + orientation
+def getY(yPrecedant, dy): return yPrecedant + dy
 
-    def radianToDegree(self, angleRadian): return angleRadian * 180/math.pi
+def getOrientation(oriPrecedant, orientation): return oriPrecedant + orientation
 
-    def degreeToRadian(self, angleDegree): return angleDegree * math.pi/180
+def radianToDegree(angleRadian): return angleRadian * ANGLE/math.pi
 
-    def calculeDistanceParcouru(self, x1, y1): return math.hypot(x1, y1)
+def degreeToRadian(angleDegree): return angleDegree * math.pi/ANGLE
+
+def calculeDistanceParcouru(x1, y1): return math.hypot(x1, y1)
+
+
+# navigation inertiel fonction
+
+def integralAx2Vx(dt, x, g):
+    valuesVx = []
+    Vx = 0
+    axPrecedant = 0
+    for ax in x:
+        Vx += dt * (ax + axPrecedant) / DIVTWO * g
+        axPrecedant = ax
+        valuesVx.append(Vx)
+    return valuesVx
+
+def integralVx2Y(dt, x):
+    valuesY = []
+    y = 0
+    vxPrecedant = 0
+    for vx in x:
+        y += dt * (vx + vxPrecedant) / DIVTWO
+        vxPrecedant = vx
+        valuesY.append(y)
+    return valuesY
+
+def valeurCorrection(max, min): return (max + min) / DIVTWO
+
+def appCorrection(m, corr): return m - corr
+
+def angleMinusPi2Pi(mz_corr, my_corr): 
+    angle = np.arctan2(mz_corr, my_corr)
+    if angle < 0 :
+        angle += 2 * math.pi
+    return radianToDegree(angle)
+
+
+
+
+
+    
