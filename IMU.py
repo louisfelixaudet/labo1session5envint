@@ -29,7 +29,6 @@ class IMU():
     def obtenir_cap_magnétique(self):
         try:
             mx, my, mz = self.imu.read_magnetometer_data()
-            print(f"my:{my:.4f}, mz:{mz:.4f}")
         except:
             print("read value not possible")
             return 
@@ -55,7 +54,6 @@ class IMU():
     def obtenir_déplacement(self, est_actif, dt):
         try:
             ax, ay, az, gx, gy, gz = self.imu.read_accelerometer_gyro_data()
-            print(f"ay:{ay:.4f}, gx:{gx:.4f}")
         except:
             print("read value not possible")
             return (self.angle_rot, self.dist_y)

@@ -1,58 +1,66 @@
 import time
+from ev_app import *
 from ev_app_client_api import *
-from IMU import IMU
 import param
 
-imu = IMU()
-
-DISTANCE = 100       # cm. dist_y revient en mètres
-TOURNER = 180        # degrés
 FORCE_AVANCER = 0.5
 FORCE_TOURNER = 0.5
-INTERVALLE = 0.04
+DISTANCE_M = 1.0
+TOURNER = 180.0
+REPOS = 0.2
 
-def envoyer(msg, force):
-    gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, msg, force)
 
-def repos(duree):
-    envoyer(param.ARRET, 0)
-    fin = time.monotonic() + duree
-    dernier = time.monotonic()
-    while time.monotonic() < fin:
-        maintenant = time.monotonic()
-        dt = maintenant - dernier
-        dernier = maintenant
-        imu.obtenir_déplacement(False, dt)
-        time.sleep(INTERVALLE)
+class Patrouilleur(EvApp):
+    def __init__(self):
+        super().__init__(param.NUM_PORT_PATROUILLE, tmo=0.2)
+        self.phase = "avancer"
+        self.phase_suivante = "avancer"
+        self.debut = True
+        self.fin_repos = 0.0
 
-try:
-    repos(1.0)
-    while True:
-        dernier = time.monotonic()
-        dist_cm = 0.0
-        while dist_cm < DISTANCE:
-            maintenant = time.monotonic()
-            dt = maintenant - dernier
-            dernier = maintenant
-            _, dist_m = imu.obtenir_déplacement(True, dt)
-            dist_cm = dist_m * 100
-            envoyer(param.AVANCER, FORCE_AVANCER)
-            time.sleep(INTERVALLE)
+    def envoyer(self, msg, force):
+        gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, msg, force)
 
-        repos(0.3)
+    def _stop_puis(self, suivante):
+        self.envoyer(param.ARRET, 0)
+        self.phase = "repos"
+        self.phase_suivante = suivante
+        self.fin_repos = time.monotonic() + REPOS
 
-        dernier = time.monotonic()
-        angle = 0.0
-        while abs(angle) < TOURNER:
-            maintenant = time.monotonic()
-            dt = maintenant - dernier
-            dernier = maintenant
-            angle, _ = imu.obtenir_déplacement(True, dt)
-            envoyer(param.DROITE, FORCE_TOURNER)
-            time.sleep(INTERVALLE)
+    def dispatch_event(self, ev):
+        if ev.type != param.MSG_IMU_INFO:
+            return
+        try:
+            angle, dist, _cap = (float(p) for p in ev.split()[:3])
+        except (ValueError, IndexError):
+            return
 
-        repos(0.3)
-except KeyboardInterrupt:
-    print("CTRL-C")
-finally:
-    envoyer(param.ARRET, 0)
+        if self.debut:
+            self.debut = False
+            self.envoyer(param.AVANCER, FORCE_AVANCER)
+            return
+
+        if self.phase == "repos":
+            if time.monotonic() < self.fin_repos:
+                return
+            self.phase = self.phase_suivante
+            if self.phase == "tourner":
+                self.envoyer(param.DROITE, FORCE_TOURNER)
+            else:
+                self.envoyer(param.AVANCER, FORCE_AVANCER)
+            return
+
+        if self.phase == "avancer" and dist >= DISTANCE_M:
+            self._stop_puis("tourner")
+        elif self.phase == "tourner" and abs(angle) >= TOURNER:
+            self._stop_puis("avancer")
+
+    def quitter(self):
+        try:
+            self.envoyer(param.ARRET, 0)
+        except Exception:
+            pass
+
+
+patrouilleur = Patrouilleur()
+patrouilleur.run()
