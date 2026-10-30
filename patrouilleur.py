@@ -3,8 +3,8 @@ from ev_app import *
 from ev_app_client_api import *
 import param
 
-FORCE_AVANCER = 0.5
-FORCE_TOURNER = 0.5
+FORCE_AVANCER = 0.6
+FORCE_TOURNER = 1
 DISTANCE_M = 1.0
 TOURNER = 180.0
 REPOS = 0.2
@@ -50,9 +50,11 @@ class Patrouilleur(EvApp):
                 self.envoyer(param.AVANCER, FORCE_AVANCER)
             return
 
-        if self.phase == "avancer" and dist >= DISTANCE_M:
+        if self.phase == "avancer" and abs(dist) >= DISTANCE_M:
+            print(f"1 m ({dist:.2f}), pivot")
             self._stop_puis("tourner")
         elif self.phase == "tourner" and abs(angle) >= TOURNER:
+            print(f"180 deg ({angle:.0f}), avance")
             self._stop_puis("avancer")
 
     def quitter(self):

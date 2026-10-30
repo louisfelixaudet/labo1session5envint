@@ -49,6 +49,7 @@ class CtrlRobot(EvApp):
             time.sleep(param.INTERVALLE_IMU)
         self.robot.arreter()
         self.robot._maj_signes()
+        self.robot.odom.distance = 0.0
         self._passif(0.2)
         print("Calibration terminee")
 
@@ -59,13 +60,16 @@ class CtrlRobot(EvApp):
         dt = maintenant - self.dernierTick
         self.dernierTick = maintenant
         self.dernierImu = maintenant
-        angle, dist = self.imu.obtenir_déplacement(self.en_mouvement, dt)
+        angle, _dist_imu = self.imu.obtenir_déplacement(self.en_mouvement, dt)
         cap = self.imu.obtenir_cap_magnétique()
         if cap is None:
             cap = 0.0
+        # En ligne droite l'accéléromètre ne voit presque pas d'accélération,
+        # donc dist_y reste sous 1 m. Les encodeurs donnent le mètre parcouru.
+        dist_m = self.robot.odom.distance / 100.0
         try:
             gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORT_PATROUILLE,
-                           param.MSG_IMU_INFO, angle, dist, cap)
+                           param.MSG_IMU_INFO, angle, dist_m, cap)
         except OSError:
             pass
 
@@ -78,11 +82,13 @@ class CtrlRobot(EvApp):
                            param.MSG_POSITION, self.x, self.y, self.orientation)
             self.dernierEnvoi = maintenant
 
-    def dispatch_event(self, ev):
-        self.envoyerPositionSiTemps()
-        self.envoyerImuSiTemps()
+    def _remettre_distance(self):
+        self.robot.odom.distance = 0.0
 
+    def dispatch_event(self, ev):
         if ev.type == 0:
+            self.envoyerPositionSiTemps()
+            self.envoyerImuSiTemps()
             return
 
         donnee = ev.split()
@@ -115,11 +121,13 @@ class CtrlRobot(EvApp):
             self.en_mouvement = False
             self.robot.arreter()
             self.robot._maj_signes()
+            self._remettre_distance()
         elif ev.type == param.STOP:
             self.en_mouvement = False
             self.robot.arreter()
             self.quitter_app()
             self.robot._maj_signes()
+            self._remettre_distance()
         elif ev.type == param.MSG_INIT:
             print("start line")
             self.startLIne = not self.startLIne
@@ -127,12 +135,16 @@ class CtrlRobot(EvApp):
                 self.en_mouvement = False
                 self.robot.arreter()
                 self.robot._maj_signes()
+                self._remettre_distance()
                 self.robot.odom.angle = 0
                 self.robot.odom.x = 0
                 self.robot.odom.y = 0
                 print("Arrêt demandé par ligne.py", self.robot.odom)
         else:
             print("message invalide", ev)
+
+        self.envoyerPositionSiTemps()
+        self.envoyerImuSiTemps()
 
     def quitter(self):
         try:
