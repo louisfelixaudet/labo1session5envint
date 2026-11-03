@@ -81,5 +81,21 @@ class IMU():
 
         return (self.angle_rot, self.dist_y)
 
-        
-
+if __name__ == "__main__":
+    import time
+    import numpy as np
+    from icm20948 import ICM20948
+    imu = ICM20948()
+    dt = 0.05
+    xs = np.arange(0, 5, dt)
+    try:
+        for x in xs:
+            ax, ay, az, gx, gy, gz = imu.read_accelerometer_gyro_data()
+            mx, my, mz = imu.read_magnetometer_data()
+            angle = imu.obtenir_cap_magnétique()
+            print(angle)
+            print(f"x:{x:.2f}, ay:{ay:.4f}, gx:{gx:.4f}, my:{my:.4f}, mz:{mz:.4f}")
+            time.sleep(dt)
+    
+    except:
+        True

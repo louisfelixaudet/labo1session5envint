@@ -4,7 +4,7 @@ from ev_app_client_api import *
 import param
 
 FORCE_AVANCER = 0.6
-FORCE_TOURNER = 1
+FORCE_TOURNER = 0.7
 DISTANCE_M = 1.0
 TOURNER = 180.0
 REPOS = 0.2

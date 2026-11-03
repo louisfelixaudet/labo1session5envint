@@ -36,7 +36,7 @@ class CtrlRobot(EvApp):
         print("Calibration: immobile")
         self._passif(1.0)
         print("Calibration: 2 tours")
-        self.robot.tournerDroite(0.5)
+        self.robot.tournerDroite(0.7)
         self.robot._maj_signes()
         angle = 0.0
         dernier = time.monotonic()
