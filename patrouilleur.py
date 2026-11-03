@@ -17,9 +17,11 @@ class Patrouilleur(EvApp):
         self.phase_suivante = "avancer"
         self.debut = True
         self.fin_repos = 0.0
+        self.cap_prec = 0.0
+        self.parcouru = 0.0
 
     def envoyer(self, msg, force):
-        gen_ev_externe(param.IP_ADRESS, param.NUM_PORT, msg, force)
+        gen_ev_externe(param.IP_ADRESSLINE, param.NUM_PORT, msg, force)
 
     def _stop_puis(self, suivante):
         self.envoyer(param.ARRET, 0)
@@ -31,7 +33,7 @@ class Patrouilleur(EvApp):
         if ev.type != param.MSG_IMU_INFO:
             return
         try:
-            angle, dist, _cap = (float(p) for p in ev.split()[:3])
+            _angle, dist, cap = (float(p) for p in ev.split()[:3])
         except (ValueError, IndexError):
             return
 
@@ -45,6 +47,9 @@ class Patrouilleur(EvApp):
                 return
             self.phase = self.phase_suivante
             if self.phase == "tourner":
+                # Cap absolu (0–359) au départ du pivot.
+                self.cap_prec = cap
+                self.parcouru = 0.0
                 self.envoyer(param.DROITE, FORCE_TOURNER)
             else:
                 self.envoyer(param.AVANCER, FORCE_AVANCER)
@@ -53,9 +58,16 @@ class Patrouilleur(EvApp):
         if self.phase == "avancer" and abs(dist) >= DISTANCE_M:
             print(f"1 m ({dist:.2f}), pivot")
             self._stop_puis("tourner")
-        elif self.phase == "tourner" and abs(angle) >= TOURNER:
-            print(f"180 deg ({angle:.0f}), avance")
-            self._stop_puis("avancer")
+        elif self.phase == "tourner":
+            # obtenir_cap_magnétique est un cap absolu, pas un angle remis à zéro.
+            pas = (cap - self.cap_prec) % 360.0
+            if pas > 180.0:
+                pas -= 360.0
+            self.cap_prec = cap
+            self.parcouru += pas
+            if abs(self.parcouru) >= TOURNER:
+                print(f"178 deg ({self.parcouru:.0f}), avance")
+                self._stop_puis("avancer")
 
     def quitter(self):
         try:
